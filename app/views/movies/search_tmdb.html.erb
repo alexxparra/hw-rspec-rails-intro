@@ -3,11 +3,16 @@
 
 
 <h2>Search in TMDb</h2>
-<%# Part 5 here %>
+<% flash.each do |key, value| %>
+  <div class="alert alert-<%= key %> alert-dismissible fade show" role="alert">
+    <span class="mesage-value"><%= value %></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% end %>
 
 <div class="search-container">
-<%# Part 1 here %>
-<%= form_tag <%# fill in here #%> do %>
+  <a href='/'>Go home</a>
+<%= form_tag search_tmdb_path, id: tmdb_form, method: :get do %>
     <label for="searchMovieName">Movie Name</label>
     <%= text_field_tag 'title', nil, class: "form-control", id: "movie_title_field", placeholder: "Manhunter", id: "movie_title_field"%> 
     <label for="searchReleaseDateField">Release Year</label>
@@ -26,3 +31,45 @@
   
 <% end %>
 </div>
+
+<table class="table table-striped col-md-12" id="movies">
+  <thead>
+    <tr>
+      <th>
+        <%= link_to 'Movie Title', movies_path({sort_by: 'title', ratings: @ratings_to_show_hash}),
+                      id: 'title_header', class: ('bg-warning hilite' if @sort_by == 'title') %>
+      </th>
+      <th>Rating</th>
+      <th>
+        <%= link_to 'Release Date',
+              movies_path({sort_by: 'release_date', ratings: @ratings_to_show_hash}),
+              id: 'release_date_header', class: ('bg-warning hilite' if @sort_by == 'release_date') %>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @movies.each do |movie| %>
+      <tr>
+        <td>
+          <%= movie.title %>
+        </td>
+        <td>
+          <%= movie.rating %>
+        </td>
+        <td>
+          <%= movie.release_date %>
+        </td>
+        <td>
+          <%= form_tag 'add_movie', class: 'form', id: 'search_movies', method: :post  do %>
+            <%= hidden_field_tag 'title', @movie.title %>
+            <%= hidden_field_tag 'rating', @movie.title %>
+            <%= hidden_field_tag 'release_date', @movie.title %>
+            <%= submit_tag 'Add movie', class: 'btn btn-primary' %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+    <h2>Create New Movie</h2>
+
+  </tbody>
+</table>

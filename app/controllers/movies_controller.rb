@@ -1,6 +1,18 @@
 class MoviesController < ApplicationController
     before_action :force_index_redirect, only: [:index]
   
+    def search_tmdb
+      if !params[:search_terms]["title"] then
+        flash[:notice] = "Please fill in all required fields!"
+        render 'search_tmdb'
+      end
+      @movies = Movie.find_in_tmdb(params[:search_terms])
+#       if @movies.empty? then
+#         flash[:notice] = "No movies found with given parameters!"
+#         redirect_to search_tmdb
+#       end
+    end
+    
     def show
       id = params[:id] # retrieve movie ID from URI route
       @movie = Movie.find(id) # look up movie by unique ID
@@ -67,5 +79,12 @@ class MoviesController < ApplicationController
     def sort_by
       params[:sort_by] || session[:sort_by] || 'id'
     end
+      
+    def add_movie
+      @movie = Movie.create!(movie_params)
+      flash[:notice] = "#{@movie.title} was successfully created."
+      redirect_to 'search_tmdb'
+    end
+      
   end
   
