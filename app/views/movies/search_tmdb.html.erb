@@ -11,8 +11,7 @@
 <% end %>
 
 <div class="search-container">
-  <a href='/'>Go home</a>
-<%= form_tag search_tmdb_path, id: tmdb_form, method: :get do %>
+<%= form_tag search_tmdb_path, id: 'tmdb_form', method: :get do %>
     <label for="searchMovieName">Movie Name</label>
     <%= text_field_tag 'title', nil, class: "form-control", id: "movie_title_field", placeholder: "Manhunter", id: "movie_title_field"%> 
     <label for="searchReleaseDateField">Release Year</label>
@@ -28,22 +27,21 @@
     <label class="form-check-label" for="language_all">All Languages</label>
   </div>
   <%= submit_tag 'Search', id: 'tmdb_submit', class: 'btn btn-warning col-2' %>
+  <%= link_to 'Back to movie list', movies_path, class: 'btn btn-secondary' %>
   
 <% end %>
 </div>
 
+<% if @movies then %>
 <table class="table table-striped col-md-12" id="movies">
   <thead>
     <tr>
       <th>
-        <%= link_to 'Movie Title', movies_path({sort_by: 'title', ratings: @ratings_to_show_hash}),
-                      id: 'title_header', class: ('bg-warning hilite' if @sort_by == 'title') %>
+        Title
       </th>
       <th>Rating</th>
       <th>
-        <%= link_to 'Release Date',
-              movies_path({sort_by: 'release_date', ratings: @ratings_to_show_hash}),
-              id: 'release_date_header', class: ('bg-warning hilite' if @sort_by == 'release_date') %>
+        Release Date
       </th>
     </tr>
   </thead>
@@ -61,9 +59,9 @@
         </td>
         <td>
           <%= form_tag 'add_movie', class: 'form', id: 'search_movies', method: :post  do %>
-            <%= hidden_field_tag 'title', @movie.title %>
-            <%= hidden_field_tag 'rating', @movie.title %>
-            <%= hidden_field_tag 'release_date', @movie.title %>
+            <%= hidden_field_tag 'title', movie.title %>
+            <%= hidden_field_tag 'rating', movie.rating %>
+            <%= hidden_field_tag 'release_date', movie.release_date %>
             <%= submit_tag 'Add movie', class: 'btn btn-primary' %>
           <% end %>
         </td>
@@ -73,3 +71,4 @@
 
   </tbody>
 </table>
+<% end %>

@@ -20,12 +20,12 @@ describe MoviesController do
       @fake_results = [double('movie1'), double('movie2')]
     end
     it 'calls the model method that performs TMDb search' do
-      expect(Movie).to receive(:find_in_tmdb).with('hardware').and_return(@fake_results)
-      get :search_tmdb, {:search_terms => 'hardware'}
+      expect(Movie).to receive(:find_in_tmdb).with({"title" => 'hardware', "action"=>'search_tmdb', "controller"=>'movies'}).and_return(@fake_results)
+      get :search_tmdb, {"title" => 'hardware'}
     end
     it 'selects the Search Results template for rendering' do
       allow(Movie).to receive(:find_in_tmdb).and_return(@fake_results)
-      get :search_tmdb, {:search_terms => 'hardware'}
+      get :search_tmdb, {"title" => 'hardware'}
       expect(response).to render_template('search_tmdb')
     end
 

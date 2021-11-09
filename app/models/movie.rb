@@ -12,17 +12,26 @@ class Movie < ActiveRecord::Base
     end
   
     def self.find_in_tmdb(search_terms)
-      if !search_terms[:title] then
-        Faraday.get(search_terms)
-      end
-      query = "https://api.themoviedb.org/search/movie?api_key=c4ce88d789ecd2caad42a13cba8642d5&query=" + search_terms[:title]
+      query = "https://api.themoviedb.org/3/search/movie?api_key=c4ce88d789ecd2caad42a13cba8642d5&query=" + search_terms[:title]
       if search_terms["release_year"] then
         query += "&year=" + search_terms[:release_year]
       end
       if search_terms["language"] then
         query += "&language=" + search_terms[:language]
       end
-      Faraday.get(URI.escape(query))
+      res = JSON.parse(Faraday.get(URI.escape(query)).body)
+      if res["results"] then
+        movies = []
+        res["results"].each do |m|
+          if !Movie.exists?(title: m["title"]) then
+            movie1 = Movie.new(title: m["title"], release_date: m["release_date"], description: m["overview"], rating: "R")
+            puts movie1.title
+            movies.append(movie1)
+          end
+        end
+        return movies
+      end
+      return []
     end
   
 end
