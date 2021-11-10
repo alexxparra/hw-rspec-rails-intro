@@ -2,7 +2,6 @@ class MoviesController < ApplicationController
     before_action :force_index_redirect, only: [:index]
   
     def search_tmdb
-      flash.clear
       if !params then
         render 'search_tmdb'
         return
@@ -10,6 +9,7 @@ class MoviesController < ApplicationController
       if !params["title"] or params["title"].empty? then
         flash[:warning] = "Please fill in all required fields!"
         render 'search_tmdb'
+        flash.clear
         return
       end
       @movies = Movie.find_in_tmdb(params)
@@ -19,15 +19,16 @@ class MoviesController < ApplicationController
         @movies = nil
       end
       render 'search_tmdb'
+      flash.clear
     end
         
     def add_movie
       if !params then
-        render 'search_tmdb'
+        redirect_to search_tmdb_path
       end
       @movie = Movie.create(title: params["title"], rating: params["rating"], release_date: params["release_date"])
       flash[:success] = "#{@movie.title} was successfully created."
-      render 'search_tmdb'
+      redirect_to search_tmdb_path
     end
     
     def show
