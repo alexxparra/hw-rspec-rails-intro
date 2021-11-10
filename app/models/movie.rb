@@ -23,10 +23,10 @@ class Movie < ActiveRecord::Base
       if res["results"] then
         movies = []
         res["results"].each do |m|
-          if !Movie.exists?(title: m["title"]) then
+#           if !Movie.exists?(title: m["title"]) then
             movie1 = Movie.new(title: m["title"], release_date: m["release_date"], description: m["overview"], rating: "R")
             movies.append(movie1)
-          end
+#           end
         end
         return movies
       end

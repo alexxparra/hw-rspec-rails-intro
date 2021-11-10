@@ -13,7 +13,7 @@ class MoviesController < ApplicationController
         return
       end
       @movies = Movie.find_in_tmdb(params)
-        puts @movies
+      puts @movies
       if @movies.empty? then
         flash[:info] = "No movies found with given parameters!"
         @movies = nil
