@@ -58,7 +58,7 @@
           <%= movie.release_date %>
         </td>
         <td>
-          <%= form_tag 'add_movie', class: 'form', id: 'search_movies', method: :post  do %>
+          <%= form_tag add_movie_path, class: 'form', id: 'search_movies', method: :post  do %>
             <%= hidden_field_tag 'title', movie.title %>
             <%= hidden_field_tag 'rating', movie.rating %>
             <%= hidden_field_tag 'release_date', movie.release_date %>
