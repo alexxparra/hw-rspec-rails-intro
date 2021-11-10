@@ -13,11 +13,11 @@ class Movie < ActiveRecord::Base
   
     def self.find_in_tmdb(search_terms)
       query = "https://api.themoviedb.org/3/search/movie?api_key=c4ce88d789ecd2caad42a13cba8642d5&query=" + search_terms[:title]
-      if search_terms["release_year"] then
-        query += "&year=" + search_terms[:release_year]
+      if search_terms["release_year"] and !search_terms["release_year"].empty? then
+        query += "&year=" + search_terms["release_year"]
       end
-      if search_terms["language"] then
-        query += "&language=" + search_terms[:language]
+      if search_terms["language"] and !search_terms["language"].empty? then
+        query += "&language=" + search_terms["language"]
       end
       res = JSON.parse(Faraday.get(URI.escape(query)).body)
       if res["results"] then
@@ -25,7 +25,6 @@ class Movie < ActiveRecord::Base
         res["results"].each do |m|
           if !Movie.exists?(title: m["title"]) then
             movie1 = Movie.new(title: m["title"], release_date: m["release_date"], description: m["overview"], rating: "R")
-            puts movie1.title
             movies.append(movie1)
           end
         end

@@ -2,6 +2,7 @@ class MoviesController < ApplicationController
     before_action :force_index_redirect, only: [:index]
   
     def search_tmdb
+      flash.clear
       if !params then
         render 'search_tmdb'
         return
@@ -12,11 +13,10 @@ class MoviesController < ApplicationController
         return
       end
       @movies = Movie.find_in_tmdb(params)
+      if @movies.empty? then
+        flash[:info] = "No movies found with given parameters!"
+      end
       render 'search_tmdb'
-#       if @movies.empty? then
-#         flash[:notice] = "No movies found with given parameters!"
-#         redirect_to search_tmdb
-#       end
     end
         
     def add_movie
